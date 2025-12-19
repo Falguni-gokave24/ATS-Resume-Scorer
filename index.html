@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume ATS Scorer</title>
+
+  <!-- Attractive Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #667eea, #764ba2);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 50px auto;
+      background: #ffffff;
+      padding: 35px;
+      border-radius: 14px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 14px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .output {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f6f7ff;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .skills {
+      font-size: 14px;
+      color: #444;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Resume ATS Scorer</h1>
+    <div class="subtitle">
+      Check how well your resume matches a job description
+    </div>
+
+    <label>Resume Text</label>
+    <textarea id="resume" placeholder="Paste your resume text here..."></textarea>
+
+    <label>Job Description</label>
+    <textarea id="jd" placeholder="Paste the job description here..."></textarea>
+
+    <button onclick="checkScore()">Check ATS Score</button>
+
+    <div class="output" id="output">
+      <div class="score" id="score"></div>
+      <div class="skills" id="skills"></div>
+    </div>
+
+    <footer>
+      All the Best !! You have bright future...
+    </footer>
+  </div>
+
+<script>
+function checkScore() {
+  fetch("http://127.0.0.1:5000/score", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      resume: document.getElementById("resume").value,
+      jd: document.getElementById("jd").value,
+      skills: ["Python", "Machine Learning", "SQL", "Flask"]
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("output").style.display = "block";
+    document.getElementById("score").innerText =
+      "ATS Score: " + data.ATS_Score + " / 100";
+    document.getElementById("skills").innerText =
+      "Missing Skills: " + data.Missing_Skills.join(", ");
+  });
+}
+</script>
+
+</body>
+</html>
